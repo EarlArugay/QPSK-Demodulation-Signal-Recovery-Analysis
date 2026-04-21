@@ -12,6 +12,20 @@ This repository documents an experiment on the full demodulation of a Quadrature
 ## Overview
 Quadrature Phase Shift Keying (QPSK) is a bandwidth-efficient modulation scheme that transmits two bits of digital information per symbol by varying the phase of a carrier wave. This experiment focuses on the coherent demodulation process, where a complex, multi-phase signal is decomposed into its constituent In-phase ($I$) and Quadrature ($Q$) components to reconstruct the original high-speed serial data.
 
+Quadrature Phase Shift Keying (QPSK) is a direct evolution of Binary Phase Shift Keying (BPSK), functioning essentially as a DSBSC modulation scheme adapted for digital data. While BPSK transmits information one bit at a time, QPSK doubles the density by transmitting two bits simultaneously without requiring additional carrier frequencies. It is a common misconception that this makes QPSK twice as fast as BPSK; in reality, grouping bits into pairs halves the data's symbol rate, effectively canceling out any raw speed gain. The true advantage of QPSK lies in its spectral efficiency, as halving the symbol rate allows the signal to occupy only half the radio-frequency bandwidth required by BPSK, thereby creating space for more users within the same channel.
+
+![Calibration Waveform](Diagrams/fig1.jpeg)
+
+*Figure A : Block Diagram of mathematical implementation of QPSK.*
+
+The modulation process begins at the bit-splitter, which divides the incoming data stream into even and odd bit sequences. The even bits are multiplied with a carrier to create a standard BPSK signal, while the odd bits are multiplied with the same carrier—but only after it has been phase-shifted by 90°. These two resulting signals, often referred to as the In-phase (I) and Quadrature (Q) components, are summed together for transmission. Because they share the same carrier frequency, they occupy the same portion of the spectrum; however, the 90° phase separation ensures they remain orthogonal, allowing the receiver to separate them through phase discrimination.
+
+![Calibration Waveform](Diagrams/fig2.jpeg)
+
+*Figure B : Block Diagram of mathematical implementation of QPSK Demodulation.*
+
+To recover the data, the receiver employs two product detectors that simultaneously demodulate the two BPSK components, recovering the original bit-pairs in parallel. These signals are then processed through a comparator or signal conditioner to eliminate noise and restore digital clarity. Finally, the bits are fed into a 2-bit parallel-to-serial converter, which places the bits back into their original sequential order to reconstruct the source data stream.
+
 ## Part A: Verifying Serial-to-Parallel Operation
 The initial stage of a QPSK transmitter requires the transformation of a high-speed serial data stream into two parallel streams ($I$ and $Q$). This "bit-splitting" is essential because QPSK encodes two bits per symbol period.
 - Methodology: A $2\text{ kHz}$ Pseudo-Random Binary Sequence (PRBS) from the Sequence Generator was fed into the Serial-to-Parallel (S/P) Converter.
